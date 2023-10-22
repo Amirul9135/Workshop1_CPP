@@ -12,7 +12,8 @@ public:
 	 
 	std::string dateTime;
 	int transactionId, user;
-	std::vector<std::pair<Product,int>> items; // pair of product and its quantity
+
+	std::vector<std::pair<Product,int>> items; // pair of product and its quantity, represents the transaction_item table
 
 	Transaction();  
 	void addProduct(Product product, int quantity);

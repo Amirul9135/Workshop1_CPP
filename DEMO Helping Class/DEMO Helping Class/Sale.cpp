@@ -35,7 +35,7 @@ vector<Sale> Sale::salesReport(string start, string end, vector<int> categoryIds
 		}
 		// since we add , after each placeholder we now have extra comma at the end
 		categoryString.erase(categoryString.size() - 1); //remove the character at the end 
-		categoryString += ") "; //  close bracket 
+		categoryString += ") "; //  close bracket   
 
 	}
 	// categoryIds wil also be used as condition but since 
@@ -50,8 +50,7 @@ vector<Sale> Sale::salesReport(string start, string end, vector<int> categoryIds
 		+ categoryString; // append category string which will be our join condition if cateogryId vector is not empty 
 						  // whereby if the categoryIds is empty this will simply be appending empty string that changes nothing
 
-	// add the where clause
-	// SINCE DATETIME data will come from user input we have to use prepared statement to be secure
+	// add the where clause 
 	sql += " WHERE  t.dateTime >= ? AND t.dateTime <= ? ";
 	 
 	// now construct our grouping
@@ -62,6 +61,7 @@ vector<Sale> Sale::salesReport(string start, string end, vector<int> categoryIds
 	}
 	// otherwise we skip the p.category to only groups it by its year and month
 	sql += " CAST(MONTH(t.dateTime) AS VARCHAR(2)) + '-' + CAST(YEAR(t.dateTime) AS VARCHAR(4)) ";
+	         //    10-2023
 
 	// now construct the sorting clause
 	sql += " ORDER BY  ";
@@ -82,13 +82,14 @@ vector<Sale> Sale::salesReport(string start, string end, vector<int> categoryIds
 		sql += " DESC ";
 	}
 	 
-	// declare vector > execute query > return result in vector
-
+	// declare vector > execute query > return result in vector 
 	vector <Sale> salesReport;
+
 	DBConnection db; 
 
 	db.prepareStatement(sql);
 	// since we have non-fixed number of placeholder ? in our prepared statment we need to use a varaible to keep track of the index
+
 	int index = 1; // start from 1
 	// load the value for category ids
 	while (index <= categoryIds.size()) {

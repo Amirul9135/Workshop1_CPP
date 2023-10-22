@@ -16,11 +16,11 @@ Product::Product(sql::ResultSet* data) {
 	description = data->getString("description");
 	price = data->getDouble("price");
 	category = data->getInt("category");
-
 }
 
 vector<Product> Product::findProduct(int category, string keyword, double minPrice,
 	double maxPrice, string sortColumn, bool ascending) {
+
 	string query = "SELECT * FROM `product` WHERE " 
 		 " (name LIKE ? OR description LIKE ?) AND price >= ? AND price <= ? AND category = ? "
 		 " ORDER BY " + sortColumn;
@@ -30,10 +30,10 @@ vector<Product> Product::findProduct(int category, string keyword, double minPri
 	else {
 		query += " DESC";
 	}
-
+	// 
 	DBConnection db;
 	db.prepareStatement(query);
-	db.stmt->setString(1, "%" + keyword + "%");
+	db.stmt->setString(1, "%" + keyword + "%");   
 	db.stmt->setString(2, "%" + keyword + "%");
 	db.stmt->setDouble(3,minPrice);
 	db.stmt->setDouble(4, maxPrice);
@@ -63,13 +63,15 @@ Product Product::findProduct(int productId) {
 	db.stmt->setInt(1, productId);
 	db.QueryResult();
 
+	Product result;
 	if (db.res->rowsCount() == 1) {
 		while (db.res->next()) {
-			Product found(db.res);
-			return found;
+			Product found(db.res); 
+			result = found; 
 		}
 	}
 	db.~DBConnection();
+	return result;
 }
  
 Product::~Product() {
