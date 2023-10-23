@@ -37,8 +37,7 @@ bool isNumeric(string input);
 bool toInteger(string* input, int* valueholder);
 
 int main() {  
-	 
-
+	  
 
 	ArrowMenu mainmenu;
 	mainmenu.header = "Welcome to Demo";

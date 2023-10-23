@@ -7,10 +7,13 @@ ArrowMenu::ArrowMenu() {
 	footer = "Use Up/Down key to move selection and press enter to select\nPress Escape to go back";
 	separator = "---------------------------------------------------";
 	bullet = ">";
+	limit = 10;
 }
 
 int ArrowMenu::prompt(int selected) {
 	// selected is the optional paramter, by default if no value is passed we assume the initial selection is at index 0, the first item
+	int before = limit / 2;
+	int after = limit - before;
 	char option = '\0';
 	while (1) {
 
@@ -18,6 +21,24 @@ int ArrowMenu::prompt(int selected) {
 		cout << header << endl << separator << endl;
 
 		for (int i = 0; i < items.size(); i++) {
+
+			if (selected < before) {
+				if (i >= limit) {
+					continue;
+				}
+			}
+			else if (selected >= items.size() - limit) {
+				if (i < (items.size() - limit)) {
+					continue;
+				}
+			}
+			else if (((items.size() - 1 - selected) >= limit)) {
+				if (i > selected + after || i <= selected - before) {
+
+					continue;
+				}
+
+			}
 			if (selected == i) {
 				cout << "\u001b[33m"; //if it is selected option we set the console text color to yellow/gold
 			}

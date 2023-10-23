@@ -21,6 +21,7 @@ public:
 
 	std::vector<std::pair<std::string, std::string>> items;
 	// first part of the pair will be the text, second part is value if any
+	int limit;
 
 	void addOption(std::string option,std::string value = "");
 	void setValue(int index, std::string text);
