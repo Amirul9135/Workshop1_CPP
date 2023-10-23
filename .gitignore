@@ -35,3 +35,5 @@
 *.tlog
 *.ipdb
 *.vsidx
+*.ipch
+/.vs
