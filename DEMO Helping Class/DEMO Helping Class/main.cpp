@@ -9,6 +9,8 @@
 #include "Product.h"
 #include "Transaction.h"
 #include "Sale.h"
+
+#include "ArrowMenu.h"
 using namespace std;
 
 
@@ -35,26 +37,27 @@ bool isNumeric(string input);
 bool toInteger(string* input, int* valueholder);
 
 int main() {  
+	 
 
-	Menu mainmenu;
+
+	ArrowMenu mainmenu;
 	mainmenu.header = "Welcome to Demo";
 	mainmenu.addOption("Register");
-	mainmenu.addOption("Login");
-	mainmenu.addOption("Exit"); 
+	mainmenu.addOption("Login"); 
 
 	while (1) {
 		switch (mainmenu.prompt())
 		{
-		case 1:
+		case -1: // prompt returns -1 when esc is pressed
+			return 0;
+			break;
+		case 0:
 			registerAccount();
 			break;
-		case 2:
+		case 1:
 			loginMenu();
-			break;
-		case 3:
-			return 0;
-		default:
-			break;
+			break;  
+		
 		}
 	} 
 } 

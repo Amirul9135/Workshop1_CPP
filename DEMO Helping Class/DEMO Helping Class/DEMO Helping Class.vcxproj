@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
+    <ClCompile Include="ArrowMenu.cpp" />
     <ClCompile Include="DBConnection.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Account.h" />
+    <ClInclude Include="ArrowMenu.h" />
     <ClInclude Include="DBConnection.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Product.h" />
