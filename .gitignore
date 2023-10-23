@@ -41,3 +41,7 @@
 *.tlog
 *.idb
 *.pdb
+*.recipe
+*.iobj
+*.log
+*.pdb
