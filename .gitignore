@@ -37,3 +37,4 @@
 *.vsidx
 *.ipch
 /.vs
+\.vs
