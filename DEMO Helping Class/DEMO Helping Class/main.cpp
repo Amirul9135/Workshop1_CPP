@@ -2,14 +2,14 @@
 #include <conio.h>
 #include <iomanip>
 #include <sstream>
-
+// advanced
 // include our custom class
 #include "Account.h" 
 #include "Menu.h"
 #include "Product.h"
 #include "Transaction.h"
 #include "Sale.h"
-using namespace std; 
+using namespace std;
 
 
 void registerAccount();
@@ -26,6 +26,13 @@ Transaction cartMenu(Account user, Transaction cart);
 void SaleReportMenu(Account user);
  
 int productCategorySelection();
+
+
+//utility functions
+bool isNumeric(string input);
+
+// extras
+bool toInteger(string* input, int* valueholder);
 
 int main() {  
 
@@ -64,6 +71,9 @@ void registerAccount() {
 	rgMenu.addOption("Register");
 	rgMenu.addOption("Back"); 
 
+
+	string tmpinput;
+	bool valid = true;
 	while (1) {
 
 		switch (rgMenu.prompt()) {
@@ -74,8 +84,15 @@ void registerAccount() {
 			break;
 		case 2:
 			cout << "Insert password:";
-			cin >> newacc.password;
-			rgMenu.setValue(1, newacc.password);
+			cin >> tmpinput;
+			if (tmpinput.length() < 6) {
+				cout << "Password must be at least 6 character long";
+				_getch();
+			}
+			else {
+				newacc.password = tmpinput;
+				rgMenu.setValue(1, newacc.password);
+			} 
 			break;
 		case 3:
 			cout << "Insert email:";
@@ -83,13 +100,38 @@ void registerAccount() {
 			rgMenu.setValue(2, newacc.email);
 			break;
 		case 4:
-			cout << "Insert yearOfBirth:";
-			cin >> newacc.yearOfBirth;
-			rgMenu.setValue(3, to_string(newacc.yearOfBirth));
+			cout << "Insert yearOfBirth:";   
+			cin >> tmpinput;
+			if (isNumeric(tmpinput) && tmpinput.length() == 4) {
+
+				newacc.yearOfBirth = stoi(tmpinput); 
+
+				rgMenu.setValue(3, to_string(newacc.yearOfBirth));
+			}
+			else {
+				cout << "Input for year of birth must be number with 4 digit";
+				_getch();
+			}
 			break;
 		case 5:
-			newacc.insert();
-			return;
+			valid = true;
+
+			// 20 years old to register,  
+			if (newacc.getAge() < 20) {
+				valid = false;
+				cout << endl << "You must be at least 20 years old to register" << endl;
+			} 
+			if (valid) { 
+				newacc.insert();
+				cout << "Registered";
+				_getch();
+				return;
+			}
+			else {
+				cout << "Please re-check your informations";
+				_getch();
+			}
+			break;
 		case 6:
 			return;
 		default:
@@ -183,12 +225,14 @@ Account profile(Account user) {
 	profileMenu.addOption("Back");
 	profileMenu.addOption("Delete Account");
 
+	string tmpInput;
 	while (1) {
 		profileMenu.setValue(0, temp.username);
 		profileMenu.setValue(1, temp.password);
 		profileMenu.setValue(2, temp.email);
 		profileMenu.setValue(3, to_string(temp.yearOfBirth)); 
 		profileMenu.footer = "You are " + to_string(temp.getAge()) + " Years old\nSelect Option";
+
 
 		switch (profileMenu.prompt())
 		{
@@ -206,7 +250,15 @@ Account profile(Account user) {
 			break;
 		case 4:
 			cout << "Insert year of birth:";
-			cin >> temp.yearOfBirth;
+		//	cin >> temp.yearOfBirth;
+			cin >> tmpInput;
+			if (isNumeric(tmpInput)) {
+				temp.yearOfBirth = stoi(tmpInput);
+		    }
+			else {
+				cout << "Input for year of birth must be numeric";
+				_getch();
+			}
 			break;
 		case 5:
 			temp = user;
@@ -308,9 +360,10 @@ Transaction products(Account user, int category,Transaction cart) {
 		
 		if (displayString == "") {
 			displayString = "\nSearch Result:\n";
-			stringstream tmpString;
+			stringstream tmpString; 
 			tmpString << fixed << setprecision(2) << setw(5) << "ID" << "|" << setw(20) << "Name" 
 				<< "|" << setw(10) << "Price" << "|" << setw(20) << "Description" << "|" << endl;
+
 			for (int i = 0; i < products.size(); i++) {
 				tmpString << setw(5) << products[i].productId << "|" << setw(20) << products[i].name 
 					<< "|" << setw(10) << products[i].price << "|" << setw(20) << products[i].description << "|" << endl; 
@@ -320,6 +373,8 @@ Transaction products(Account user, int category,Transaction cart) {
 		productMenu.footer = displayString;
 
 		switch (productMenu.prompt()) {
+
+			/// the case will modify the variable used as parameter to call the search method
 		case 1:
 			cout << "Insert Key Word: ";
 			getline(cin, keyWord);
@@ -350,6 +405,7 @@ Transaction products(Account user, int category,Transaction cart) {
 			ascending = !ascending; 
 			break;
 		case 6:
+			
 			products = Product::findProduct(category, keyWord, minPrice, maxPrice, sortColumn, ascending);
 			displayString = "";
 			break;
@@ -536,7 +592,7 @@ void SaleReportMenu(Account user) {
 			cout << "Inser start date (yyyy-mm-dd): ";
 			cin >> start;
 			saleM.setValue(0, start);
-			break;
+			break;	
 		case 2:
 			cout << "Inser end date (yyyy-mm-dd): ";
 			cin >> endDate;
@@ -546,7 +602,7 @@ void SaleReportMenu(Account user) {
 			tmpSelectedCategory = productCategorySelection();
 
 			//find the selcted category id inside our categoryIds vector
-			 iterator= find(categoryIds.begin(), categoryIds.end(), tmpSelectedCategory);
+			 iterator = find(categoryIds.begin(), categoryIds.end(), tmpSelectedCategory);
 
 			if (iterator == categoryIds.end()) {//if the iterator reaches the end means not found
 				categoryIds.push_back(tmpSelectedCategory);
@@ -572,7 +628,7 @@ void SaleReportMenu(Account user) {
 			break;
 		case 6:
 			result.clear(); 
-				result = Sale::salesReport(start, endDate, categoryIds, sortByDate, ascending); 
+			result = Sale::salesReport(start, endDate, categoryIds, sortByDate, ascending); 
 			break;
 		case 7:
 			return;
@@ -580,7 +636,6 @@ void SaleReportMenu(Account user) {
 		}
 
 	}
-
 }
  
 int productCategorySelection() {
@@ -599,3 +654,43 @@ int productCategorySelection() {
 
 	}
 } 
+
+
+bool isNumeric(string input) {
+	for (int i = 0; i < input.length(); i++) {
+		// loop through the string and if the character at index is not digit return false
+		if (!isdigit(input.at(i))) {
+			return false;
+		}
+	}
+	// if loop finishes means all is digit so return true
+	return true;
+}
+
+
+// extra example validating using try catch with pointers
+bool toInteger(string * input, int * valueholder) {
+	// our parameter here is pointer instead of value,
+	// which mean anychanges done to this pointer will applies to whatever variable address we pass into it
+	// so when we store stoi result to valueholder pointer we are storing the value into the memory address of variable passed into this function
+
+	try
+	{
+		*valueholder = stoi(*input); //if the string fails to be converted into integer it will throw error otherwise converted integer is stored into valueholder
+
+		return true;// return true after successful conversion from string to int stored into valuholder
+	}
+	catch (exception ex) {
+		return false; // catch error and return false, error means string failed to be converted to integer
+	}
+}
+
+bool toDecimal(string* input, double* value) {
+	try {
+		*value = stod(*input);
+		return true;
+	}
+	catch(exception ex){
+		return false;
+	}
+}

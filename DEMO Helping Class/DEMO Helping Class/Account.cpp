@@ -74,6 +74,9 @@ void Account::remove() {
 	db.~DBConnection();
 }
 int Account::getAge() {
+	if (yearOfBirth == 0) {
+		return 0;
+	}
 	time_t current = time(0); // get time in epoch seconds (since 1900)
 	tm now; // create a struct/object of tm to hold data
 	localtime_s(&now, &current); //populate the now object with data from current
