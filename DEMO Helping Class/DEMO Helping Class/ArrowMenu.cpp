@@ -4,7 +4,7 @@
 using namespace std;
 
 ArrowMenu::ArrowMenu() {
-	footer = "Use Up/Down key to move selection and press enter to select";
+	footer = "Use Up/Down key to move selection and press enter to select\nPress Escape to go back";
 	separator = "---------------------------------------------------";
 	bullet = ">";
 }
@@ -90,7 +90,7 @@ void ArrowMenu::clearOption() {
 	items.clear();
 }
 void ArrowMenu::setValue(int index, string value) {
-	if (index > 0 && index < items.size()) {
+	if (index >= 0 && index < items.size()) {
 		items[index].second = value;
 	}
 }

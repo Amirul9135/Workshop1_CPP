@@ -65,27 +65,29 @@ int main() {
 void registerAccount() {
 	Account newacc;
 
-	Menu rgMenu;
+	ArrowMenu rgMenu;
 	rgMenu.header = "Registration";
 	rgMenu.addOption("Username");
 	rgMenu.addOption("Password");
 	rgMenu.addOption("Email");
 	rgMenu.addOption("Year of Birth");
-	rgMenu.addOption("Register");
-	rgMenu.addOption("Back"); 
+	rgMenu.addOption("Register"); 
 
 
 	string tmpinput;
 	bool valid = true;
+	int option = 0;
 	while (1) {
-
-		switch (rgMenu.prompt()) {
-		case 1:
+		option = rgMenu.prompt(option);
+		switch (option) {
+		case -1:
+			return;
+		case 0:
 			cout << "Insert Username:";
 			cin >> newacc.username;
 			rgMenu.setValue(0, newacc.username);
 			break;
-		case 2:
+		case 1:
 			cout << "Insert password:";
 			cin >> tmpinput;
 			if (tmpinput.length() < 6) {
@@ -97,12 +99,12 @@ void registerAccount() {
 				rgMenu.setValue(1, newacc.password);
 			} 
 			break;
-		case 3:
+		case 2:
 			cout << "Insert email:";
 			cin >> newacc.email;
 			rgMenu.setValue(2, newacc.email);
 			break;
-		case 4:
+		case 3:
 			cout << "Insert yearOfBirth:";   
 			cin >> tmpinput;
 			if (isNumeric(tmpinput) && tmpinput.length() == 4) {
@@ -116,7 +118,7 @@ void registerAccount() {
 				_getch();
 			}
 			break;
-		case 5:
+		case 4:
 			valid = true;
 
 			// 20 years old to register,  
@@ -134,39 +136,38 @@ void registerAccount() {
 				cout << "Please re-check your informations";
 				_getch();
 			}
-			break;
-		case 6:
-			return;
-		default:
-			break;
+			break; 
 		}
 	}
 
 }
 void loginMenu() {
-	Menu loginMenu;
+	ArrowMenu loginMenu;
 	loginMenu.header = "LOGIN";
 	loginMenu.addOption("username");
 	loginMenu.addOption("password");
-	loginMenu.addOption("Login");
-	loginMenu.addOption("Back"); 
+	loginMenu.addOption("Login"); 
 
 	Account user;
-
+	int option = 0;
 	while(1) {
-		switch (loginMenu.prompt())
+		option = loginMenu.prompt(option);
+		switch (option)
 		{
-		case 1:
+		case -1:
+			return;
+			break;
+		case 0:
 			cout << "Insert Username:";
 			cin >> user.username;
 			loginMenu.setValue(0, user.username);
 			break;
-		case 2:
+		case 1:
 			cout << "Insert Password:";
 			cin >> user.password;
 			loginMenu.setValue(1, user.password);
 			break;
-		case 3:
+		case 2:
 			if (user.login()) {
 				home(user);
 			}
@@ -174,41 +175,35 @@ void loginMenu() {
 				cout << "Invalid Login";
 				_getch();
 			}
-			break;
-		case 4:
-			return;
-			break;
-		default:
-			break;
+			break; 
 		}
 	}
 }
 
 
 void home(Account user) {
-	Menu homeMenu;
+	ArrowMenu homeMenu;
 	homeMenu.addOption("Profile");
 	homeMenu.addOption("Shop");
-	homeMenu.addOption("Sale Report");
-	homeMenu.addOption("Logout"); 
+	homeMenu.addOption("Sale Report"); 
+	int option = 0;
 	while (1) {
 		homeMenu.header = "Welcome " + user.username;
-		switch (homeMenu.prompt())
+		option = homeMenu.prompt(option);
+		switch (option)
 		{
-		case 1:
-			user = profile(user);
-			break;
-		case 2:
-			shop(user);
-			break;
-		case 3:
-			SaleReportMenu(user);
-			break;
-		case 4:
+		case -1:
 			return;
 			break;
-		default:
+		case 0:
+			user = profile(user);
 			break;
+		case 1:
+			shop(user);
+			break;
+		case 2:
+			SaleReportMenu(user);
+			break; 
 		}
 	}
 }
@@ -217,18 +212,18 @@ Account profile(Account user) {
 
 	Account temp = user; // copy the object
 
-	Menu profileMenu;
+	ArrowMenu profileMenu;
 	profileMenu.header = "Your profile";
 	profileMenu.addOption("username");
 	profileMenu.addOption("password");
 	profileMenu.addOption("email");
 	profileMenu.addOption("yearOfBirth");
 	profileMenu.addOption("Reset");
-	profileMenu.addOption("Save");
-	profileMenu.addOption("Back");
+	profileMenu.addOption("Save"); 
 	profileMenu.addOption("Delete Account");
 
 	string tmpInput;
+	int option = 0;
 	while (1) {
 		profileMenu.setValue(0, temp.username);
 		profileMenu.setValue(1, temp.password);
@@ -236,22 +231,25 @@ Account profile(Account user) {
 		profileMenu.setValue(3, to_string(temp.yearOfBirth)); 
 		profileMenu.footer = "You are " + to_string(temp.getAge()) + " Years old\nSelect Option";
 
-
-		switch (profileMenu.prompt())
+		option = profileMenu.prompt(option);
+		switch (option)
 		{
-		case 1:
+		case -1:
+			return user;
+			break;
+		case 0:
 			cout << "Insert Username:";
 			cin >> temp.username;
 			break;
-		case 2:
+		case 1:
 			cout << "Insert password:";
 			cin >> temp.password;
 			break;
-		case 3:
+		case 2:
 			cout << "Insert email:";
 			cin >> temp.email;
 			break;
-		case 4:
+		case 3:
 			cout << "Insert year of birth:";
 		//	cin >> temp.yearOfBirth;
 			cin >> tmpInput;
@@ -263,18 +261,17 @@ Account profile(Account user) {
 				_getch();
 			}
 			break;
-		case 5:
+		case 4:
 			temp = user;
 			break;
-		case 6:
+		case 5:
 			user = temp;
 			user.update();
 			cout << "Updated";
-			_getch();  
-		case 7:
+			_getch();   
 			return user;
 			break;
-		case 8:
+		case 6:
 			cout << "Delete your account? (y/n)";
 			char confirm;
 			confirm = _getch();
@@ -283,10 +280,7 @@ Account profile(Account user) {
 				user.remove();
 				main();
 			}
-
-			break;
-		default:
-			break;
+			break; 
 		}
 	}
 }
@@ -296,31 +290,30 @@ void shop(Account user) {
 	Transaction cart; //initialize a transaction to hold product values
 	cart.user = user.accountId; // put currently logge in user id into the transaction
 	
-	Menu shopMenu;
+	ArrowMenu shopMenu;
 	shopMenu.footer = "Select Product Category";
 	shopMenu.addOption("Apparel");
 	shopMenu.addOption("Food");
 	shopMenu.addOption("Furniture");
-	shopMenu.addOption("View Cart");
-	shopMenu.addOption("Back");
+	shopMenu.addOption("View Cart"); 
 	while (1) {
 		shopMenu.header = "SHOP\nItems in cart:" + to_string(cart.count()) + "  \nTotal Price: " + to_string(cart.total());
 		switch (shopMenu.prompt())
 		{
-		case 1:
+		case -1:
+			return;
+			break;
+		case 0:
 			cart = products(user, 1,cart);
 			break;
-		case 2:
+		case 1:
 			cart = products(user, 2, cart);
 			break;
-		case 3:
+		case 2:
 			cart = products(user, 3, cart);
 			break;
-		case 4: 
+		case 3: 
 			cart = cartMenu(user,cart);
-			break;
-		case 5:
-			return;
 			break; 
 		}
 	}
@@ -335,21 +328,24 @@ Transaction products(Account user, int category,Transaction cart) {
 	double minPrice = 0, maxPrice = 999999;
 	
 
-	Menu productMenu;
+	ArrowMenu productMenu;
 	productMenu.header = "Search Option";
 	productMenu.addOption("Key Word");
 	productMenu.addOption("Minimum Price");
 	productMenu.addOption("Maximum Price");
 	productMenu.addOption("Sort By");
 	productMenu.addOption("Ordering");
-	productMenu.addOption("Search");
-	productMenu.addOption("Select");
-	productMenu.addOption("Back");
+	productMenu.addOption("Search"); 
 
 	Menu sortingSubMenu;
 	sortingSubMenu.header = "Select Sort category";
 	sortingSubMenu.addOption("Price");
 	sortingSubMenu.addOption("Name");
+
+	ArrowMenu productSelect;
+	productSelect.bullet = ""; //we dont want bullet here
+	productSelect.header = "Search Result:";
+	int selectedProduct = 0;
 
 	while (1)
 	{
@@ -361,39 +357,28 @@ Transaction products(Account user, int category,Transaction cart) {
 			productMenu.setValue(4, "Descending");
 		}
 		
-		if (displayString == "") {
-			displayString = "\nSearch Result:\n";
-			stringstream tmpString; 
-			tmpString << fixed << setprecision(2) << setw(5) << "ID" << "|" << setw(20) << "Name" 
-				<< "|" << setw(10) << "Price" << "|" << setw(20) << "Description" << "|" << endl;
-
-			for (int i = 0; i < products.size(); i++) {
-				tmpString << setw(5) << products[i].productId << "|" << setw(20) << products[i].name 
-					<< "|" << setw(10) << products[i].price << "|" << setw(20) << products[i].description << "|" << endl; 
-			}
-			displayString += tmpString.str();
-		}
-		productMenu.footer = displayString;
 
 		switch (productMenu.prompt()) {
 
-			/// the case will modify the variable used as parameter to call the search method
-		case 1:
+		case -1:
+			return cart;
+			break;
+		case 0:
 			cout << "Insert Key Word: ";
 			getline(cin, keyWord);
 			productMenu.setValue(0, keyWord);
 			break;
-		case 2:
+		case 1:
 			cout << "Insert Min Price: ";
 			cin >> minPrice;
 			productMenu.setValue(1, to_string(minPrice));
 			break;
-		case 3:
+		case 2:
 			cout << "Insert Max Price: ";
 			cin >> maxPrice;
 			productMenu.setValue(2, to_string(maxPrice));
 			break;
-		case 4:
+		case 3:
 			switch (sortingSubMenu.prompt())
 			{
 			case 1:
@@ -404,24 +389,37 @@ Transaction products(Account user, int category,Transaction cart) {
 				break;
 			}
 			break;
-		case 5:
+		case 4:
 			ascending = !ascending; 
 			break;
-		case 6:
+		case 5:
 			
-			products = Product::findProduct(category, keyWord, minPrice, maxPrice, sortColumn, ascending);
-			displayString = "";
-			break;
-		case 7:
-			cout << "Insert Product Id to Select:";
-			int productId;
-			cin >> productId;
-			cart =  productDetail(user, productId,cart);
-			break;
-		case 8:
-			return cart;
-			break;
+			products = Product::findProduct(category, keyWord, minPrice, maxPrice, sortColumn, ascending); 
+			productSelect.clearOption(); 
+			stringstream tmpString;
+			tmpString << fixed << setprecision(2) << setw(5) << "ID" << "|" << setw(20) << "Name"
+					<< "|" << setw(10) << "Price" << "|" << setw(20) << "Description" << "|" << endl;
 
+			productSelect.header = tmpString.str();
+			tmpString.str("");
+			for (int i = 0; i < products.size(); i++) {
+				tmpString << setw(5) << products[i].productId << "|" << setw(20) << products[i].name
+					<< "|" << setw(10) << products[i].price << "|" << setw(20) << products[i].description << "|" << endl;
+				productSelect.addOption(tmpString.str());
+				tmpString.str("");
+
+			}  
+			selectedProduct = 0;
+			while (1) { 
+				selectedProduct = productSelect.prompt(selectedProduct);
+				if (selectedProduct != -1) { // if not escape pressed process it
+					cart  = productDetail(user, products[selectedProduct].productId, cart);
+				}
+				else {
+					break;
+				}
+			}
+			break; 
 		}
 	};
 
@@ -436,18 +434,19 @@ Transaction productDetail(Account user, int productId, Transaction cart) {
 		return cart;
 	}
 
-	Menu productMenu;
-	productMenu.header = "Action:";
-	productMenu.addOption("Add to cart");
-	productMenu.addOption("Back");
-	productMenu.footer = "Product Details:\n"
+	ArrowMenu productMenu; 
+	productMenu.addOption("Add to cart"); 
+	productMenu.header = "Product Details:\n"
 		"\nName\t: " + product.name
 		+ "\nDescription\t: " + product.description
 		+ "\nPrice\t: " + to_string(product.price);
 	while (1) {
 		switch (productMenu.prompt())
 		{
-		case 1:
+		case -1:
+			return cart;
+			break;
+		case 0:
 			cout << "Insert Quantity :";
 			int qty;
 			cin >> qty;
@@ -457,20 +456,15 @@ Transaction productDetail(Account user, int productId, Transaction cart) {
 			cout << endl << "Product Added into cart";
 			_getch();
 			break;
-		case 2:
-			return cart;
-			break;
 		}
 	}
 
 }
 
 Transaction cartMenu(Account user, Transaction cart) {
-	Menu cartM;
-	cartM.header = "Actions";
+	ArrowMenu cartM; 
 	cartM.addOption("Checkout");
-	cartM.addOption("Empty Cart");
-	cartM.addOption("Back");
+	cartM.addOption("Empty Cart"); 
 	stringstream ss;
 	ss << fixed << setprecision(2) << setw(20) << "Product|" << setw(20) << "Price|" << setw(20) 
 		<< "Quantity|" << setw(20) << "Subtotal|" << endl;
@@ -479,13 +473,16 @@ Transaction cartMenu(Account user, Transaction cart) {
 			<< cart.items[i].second << setw(20) << (cart.items[i].first.price * cart.items[i].second) << endl;
 	}
 	ss << setw(20) << "SUM" << setw(20) <<  "" << setw(20) << cart.count() << setw(20) << cart.total();
-	cartM.footer = "Cart Items\n" + ss.str();
+	cartM.header = "Cart Items\n" + ss.str();
 	char confirm;
 	while (1)
 	{ 
 		switch (cartM.prompt())
 		{
-		case 1:
+		case -1:
+			return cart;
+			break;
+		case 0:
 			cout << "Check out? (y/n)";
 			confirm = _getch();
 			if (confirm == 'Y' || confirm == 'y') {
@@ -495,7 +492,7 @@ Transaction cartMenu(Account user, Transaction cart) {
 				shop(user); // go back to shop with empty cart
 			}
 			break;
-		case 2:
+		case 1:
 			cout << "Clear your cart? (y/n)"; 
 			confirm = _getch();
 			if (confirm == 'Y' || confirm == 'y') { 
@@ -517,7 +514,7 @@ void SaleReportMenu(Account user) {
 
 	bool sortByDate = true, ascending = true;
 	
-	Menu saleM; 
+	ArrowMenu saleM; 
 	saleM.addOption("Start");
 	saleM.addOption("End");
 	saleM.addOption("Product Category");
@@ -525,8 +522,7 @@ void SaleReportMenu(Account user) {
 	saleM.setValue(3, "Date");
 	saleM.addOption("Order");
 	saleM.setValue(4, "Ascending");
-	saleM.addOption("Generate");
-	saleM.addOption("Back");
+	saleM.addOption("Generate"); 
 
 	vector<Sale> result; // vector to store the result
 
@@ -538,7 +534,7 @@ void SaleReportMenu(Account user) {
 	int tmpSelectedCategory;
 
 	vector<int>::iterator iterator; //iterator is declare using what we are iterating, in this case it is vector of integer
-
+	int option = 0;
 	while (1)
 	{
 
@@ -588,20 +584,23 @@ void SaleReportMenu(Account user) {
 		ss << endl << "--- END OF REPORT ---" << endl;
 		saleM.header = ss.str();
 		 
-
-		switch (saleM.prompt())
+		option = saleM.prompt(option);
+		switch (option)
 		{
-		case 1:
+		case -1:
+			return;
+			break;
+		case 0:
 			cout << "Inser start date (yyyy-mm-dd): ";
 			cin >> start;
 			saleM.setValue(0, start);
 			break;	
-		case 2:
+		case 1:
 			cout << "Inser end date (yyyy-mm-dd): ";
 			cin >> endDate;
 			saleM.setValue(1, endDate);
 			break;
-		case 3: //toggle category
+		case 2: //toggle category
 			tmpSelectedCategory = productCategorySelection();
 
 			//find the selcted category id inside our categoryIds vector
@@ -615,27 +614,24 @@ void SaleReportMenu(Account user) {
 			}
 			
 			break;
-		case 4:// sort by
+		case 3:// sort by
 			sortByDate = !sortByDate;
 			if(sortByDate)
 				saleM.setValue(3, "Date");
 			else
 				saleM.setValue(3, "Price");
 			break;
-		case 5:
+		case 4:
 			ascending = !ascending;
 			if(ascending)
 				saleM.setValue(4, "Ascending");
 			else
 				saleM.setValue(4, "Descending");
 			break;
-		case 6:
+		case 5:
 			result.clear(); 
 			result = Sale::salesReport(start, endDate, categoryIds, sortByDate, ascending); 
-			break;
-		case 7:
-			return;
-			break;
+			break; 
 		}
 
 	}
