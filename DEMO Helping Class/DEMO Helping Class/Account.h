@@ -8,7 +8,8 @@ class Account
 {
 public://access specifier
 	int accountId, yearOfBirth; //numerical attributes
-	std::string username, password, email; // text attributes
+	std::string username, email; // text attributes
+	 
 
 
 	Account(); // constructor method
@@ -25,6 +26,20 @@ public://access specifier
 
 	static Account older(Account a, Account b);
 
+
+
+	// getter setter for password
+	void setPassword(std::string pass);
+	std::string getPassword();
+
+	// to check if a string matches with the encrypted password
+	bool MatcPasswordWith(std::string plainText);
+
+private:
+	std::string password; //encapsulate password inside private because we want to ensure it is encrypted when set
+	std::string encrypt(std::string input);
+	char toChar(int asciDecimal);
+	bool isMatch(std::string encrypted, std::string testText);
 	 
 };
 
